@@ -1,0 +1,22 @@
+<%- include('../partials/head') %>
+<h1>Review claims</h1>
+<nav class="subnav"><a href="/admin">Overview</a><a href="/admin/items">Reports</a><a href="/admin/users">Users</a></nav>
+<% if (!claims.length) { %><p class="empty">No claims have been submitted.</p><% } %>
+<% claims.forEach(function(c){ %>
+<section class="panel">
+  <div class="row"><h2><a href="/items/<%= c.item_id %>"><%= c.item_title %></a></h2><span class="status status-<%= slug(c.status) %>"><%= c.status %></span></div>
+  <p class="muted">Claimant: <%= c.claimant_name %> (<%= c.claimant_email %>), submitted <%= fmtDate(c.created_at) %></p>
+  <div class="compare">
+    <div><h3>Claimant's proof</h3><p><%= c.claim_details %></p></div>
+    <div><h3>Finder's private details</h3><p><%= c.item_private_details || 'The finder did not add private details. Verify in person.' %></p></div>
+  </div>
+  <% if (c.status === 'Pending') { %>
+  <form method="post" action="/admin/claims/<%= c.claim_id %>/review" class="form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>Note to claimant (optional)<input name="note" maxlength="300"></label>
+    <div class="actions"><button class="btn" name="decision" value="approve">Approve claim</button><button class="btn btn-danger" name="decision" value="reject">Reject claim</button></div>
+  </form>
+  <% } else if (c.review_note) { %><p>Note: <%= c.review_note %></p><% } %>
+</section>
+<% }) %>
+<%- include('../partials/foot') %>

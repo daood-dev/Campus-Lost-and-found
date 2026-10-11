@@ -1,0 +1,23 @@
+<%- include('../partials/head') %>
+<h1>Manage users</h1>
+<nav class="subnav"><a href="/admin">Overview</a><a href="/admin/items">Reports</a><a href="/admin/claims">Claims</a></nav>
+<div class="table-wrap"><table>
+  <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+  <% users.forEach(function(u){ %>
+    <tr>
+      <td><%= u.full_name %></td><td><%= u.email %></td><td><%= u.role %></td><td><%= u.is_active ? 'Active' : 'Deactivated' %></td>
+      <td class="actions">
+        <% if (u.user_id !== currentUser.user_id) { %>
+        <form method="post" action="/admin/users/<%= u.user_id %>/role" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <label class="sr" for="r<%= u.user_id %>">Role</label>
+          <select id="r<%= u.user_id %>" name="role"><% ['student','staff','admin'].forEach(function(r){ %><option <%= u.role===r?'selected':'' %>><%= r %></option><% }) %></select>
+          <button class="btn btn-small btn-ghost">Set role</button></form>
+        <form method="post" action="/admin/users/<%= u.user_id %>/toggle"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-small btn-ghost"><%= u.is_active ? 'Deactivate' : 'Reactivate' %></button></form>
+        <% } else { %><span class="muted">You</span><% } %>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table></div>
+<%- include('../partials/foot') %>

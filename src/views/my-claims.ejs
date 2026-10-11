@@ -1,0 +1,8 @@
+<%- include('partials/head') %>
+<h1>Your claims</h1>
+<% if (!claims.length) { %><p class="empty">You have not submitted any claims.</p><% } %>
+<% claims.forEach(function(c){ %>
+<div class="panel"><div class="row"><a href="/items/<%= c.item_id %>"><strong><%= c.item_title %></strong></a><span class="status status-<%= slug(c.status) %>"><%= c.status %></span></div>
+<p class="muted">Submitted <%= fmtDate(c.created_at) %></p><% if (c.review_note) { %><p>Reviewer note: <%= c.review_note %></p><% } %></div>
+<% }) %>
+<%- include('partials/foot') %>

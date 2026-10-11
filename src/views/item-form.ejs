@@ -1,0 +1,23 @@
+<%- include('partials/head') %>
+<% const editing = !!item; const action = editing ? '/items/' + item.item_id + '/edit' : '/report/' + type.toLowerCase(); %>
+<section class="narrow">
+  <h1><%= editing ? 'Edit your report' : title %></h1>
+  <% if (errors.length) { %><ul class="errors" role="alert"><% errors.forEach(function(e){ %><li><%= e %></li><% }) %></ul><% } %>
+  <form method="post" action="<%= action %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data" class="form">
+    <label>What is it?<input name="title" value="<%= values.title || '' %>" required maxlength="80" placeholder="Black leather wallet"></label>
+    <label>Category
+      <select name="category" required><option value="">Choose a category</option>
+        <% categories.forEach(function(c){ %><option <%= values.category === c ? 'selected' : '' %>><%= c %></option><% }) %>
+      </select></label>
+    <label>Description<textarea name="description" rows="4" required maxlength="1000" placeholder="Colour, brand, size, condition"><%= values.description || '' %></textarea><small>This is shown publicly. Leave out phone numbers and ID numbers.</small></label>
+    <label>Where on campus?<input name="location" list="locs" value="<%= values.location || '' %>" required maxlength="80">
+      <datalist id="locs"><% locations.forEach(function(l){ %><option value="<%= l %>"><% }) %></datalist></label>
+    <label>Date <%= type === 'Lost' ? 'lost' : 'found' %><input type="date" name="item_date" value="<%= values.item_date || today %>" max="<%= today %>" required></label>
+    <label>Private identifying details (optional)
+      <textarea name="private_details" rows="3" maxlength="500" placeholder="<%= type === 'Found' ? 'Marks or contents you can use to verify the real owner' : 'Marks, contents or serial numbers that prove it is yours' %>"><%= values.private_details || '' %></textarea>
+      <small>Only you and administrators can see this.</small></label>
+    <label>Photo (optional)<input type="file" name="image" accept="image/jpeg,image/png,image/webp"><small>JPG, PNG or WebP, up to 2 MB.</small></label>
+    <button class="btn"><%= editing ? 'Save changes' : (type === 'Lost' ? 'Submit lost report' : 'Submit found report') %></button>
+  </form>
+</section>
+<%- include('partials/foot') %>

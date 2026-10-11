@@ -1,0 +1,22 @@
+<%- include('partials/head') %>
+<h1>Search reports</h1>
+<form class="filters" method="get" action="/search">
+  <label>Keywords<input name="q" value="<%= filters.q %>"></label>
+  <label>Type<select name="type"><option value="">Lost and found</option><option <%= filters.type==='Lost'?'selected':'' %>>Lost</option><option <%= filters.type==='Found'?'selected':'' %>>Found</option></select></label>
+  <label>Category<select name="category"><option value="">Any</option><% categories.forEach(function(c){ %><option <%= filters.category===c?'selected':'' %>><%= c %></option><% }) %></select></label>
+  <label>Location<input name="location" value="<%= filters.location %>"></label>
+  <label>Status<select name="status"><option value="">Any</option><% statuses.forEach(function(s){ %><option <%= filters.status===s?'selected':'' %>><%= s %></option><% }) %></select></label>
+  <label>From<input type="date" name="from" value="<%= filters.from %>"></label>
+  <label>To<input type="date" name="to" value="<%= filters.to %>"></label>
+  <button class="btn">Apply filters</button>
+</form>
+<p class="muted"><%= total %> report<%= total === 1 ? '' : 's' %> found</p>
+<% if (!items.length) { %><p class="empty">Nothing matches these filters. Try fewer keywords or <a href="/report/lost">report your item</a> so we can match it when it turns up.</p><% } %>
+<div class="grid"><% items.forEach(function(it){ %><%- include('partials/card', { it: it }) %><% }) %></div>
+<% if (pages > 1) { const qs = new URLSearchParams(Object.fromEntries(Object.entries(filters).filter(e => e[1]))); %>
+<nav class="pager" aria-label="Pages">
+  <% if (page > 1) { qs.set('page', page - 1); %><a href="/search?<%= qs.toString() %>">Previous</a><% } %>
+  <span>Page <%= page %> of <%= pages %></span>
+  <% if (page < pages) { qs.set('page', page + 1); %><a href="/search?<%= qs.toString() %>">Next</a><% } %>
+</nav><% } %>
+<%- include('partials/foot') %>

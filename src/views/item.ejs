@@ -1,0 +1,72 @@
+<%- include('partials/head') %>
+<article class="detail">
+  <div class="detail-main">
+    <div class="row"><span class="type type-<%= item.report_type.toLowerCase() %>"><%= item.report_type %></span><%- include('partials/status', { s: item.status }) %><% if (item.is_hidden) { %><span class="status status-hidden">Hidden</span><% } %></div>
+    <h1><%= item.title %></h1>
+    <% if (item.image_url) { %><img class="photo" src="<%= item.image_url %>" alt="Photo of <%= item.title %>"><% } %>
+    <p><%= item.description %></p>
+    <dl class="meta">
+      <div><dt>Category</dt><dd><%= item.category %></dd></div>
+      <div><dt>Location</dt><dd><%= item.location %></dd></div>
+      <div><dt>Date <%= item.report_type === 'Lost' ? 'lost' : 'found' %></dt><dd><%= fmtDate(item.item_date) %></dd></div>
+      <div><dt>Reported by</dt><dd><%= item.reporter_name %>, <%= fmtDate(item.created_at) %></dd></div>
+    </dl>
+    <% if (owner && item.private_details) { %><div class="note"><strong>Private details (only you and administrators see this)</strong><p><%= item.private_details %></p></div><% } %>
+
+    <% if (owner) { %>
+    <div class="actions">
+      <a class="btn btn-ghost" href="/items/<%= item.item_id %>/edit">Edit report</a>
+      <% if (item.report_type === 'Lost' && item.status !== 'Recovered') { %>
+        <form method="post" action="/items/<%= item.item_id %>/recovered"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-ghost">I got it back</button></form>
+      <% } %>
+      <form method="post" action="/items/<%= item.item_id %>/delete"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-danger">Delete report</button></form>
+    </div>
+    <% } %>
+  </div>
+
+  <aside class="detail-side">
+    <% if (canClaim) { %>
+    <section class="panel">
+      <h2>Is this yours?</h2>
+      <p>Describe something only the owner would know. An administrator will compare it with the finder's private details.</p>
+      <form method="post" action="/items/<%= item.item_id %>/claim" class="form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label>Proof of ownership<textarea name="claim_details" rows="4" required minlength="15" maxlength="800"></textarea></label>
+        <button class="btn">Submit claim</button>
+      </form>
+    </section>
+    <% } else if (myClaim) { %>
+    <section class="panel"><h2>Your claim</h2><p>Status: <strong><%= myClaim.status %></strong></p><% if (myClaim.review_note) { %><p class="muted"><%= myClaim.review_note %></p><% } %></section>
+    <% } else if (!currentUser && item.report_type === 'Found') { %>
+    <section class="panel"><h2>Is this yours?</h2><p><a href="/login">Log in</a> to submit a claim.</p></section>
+    <% } %>
+
+    <% if (owner && matches.length) { %>
+    <section class="panel">
+      <h2>Possible matches</h2>
+      <% matches.forEach(function(m){ const otherId = m.lost_item_id === item.item_id ? m.found_item_id : m.lost_item_id; const otherTitle = m.lost_item_id === item.item_id ? m.found_title : m.lost_title; %>
+        <div class="match">
+          <a href="/items/<%= otherId %>"><%= otherTitle %></a>
+          <span class="muted">Similarity <%= m.match_score %>/100 (<%= m.status %>). A score is not proof of ownership.</span>
+          <div class="actions">
+            <form method="post" action="/matches/<%= m.match_id %>/confirm"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="back" value="/items/<%= item.item_id %>"><button class="btn btn-small">Looks right</button></form>
+            <form method="post" action="/matches/<%= m.match_id %>/dismiss"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="back" value="/items/<%= item.item_id %>"><button class="btn btn-small btn-ghost">Not a match</button></form>
+          </div>
+        </div>
+      <% }) %>
+    </section>
+    <% } %>
+
+    <% if (admin) { %>
+    <section class="panel">
+      <h2>Administration</h2>
+      <% claims.forEach(function(c){ %><p class="muted">Claim by <%= c.claimant_name %>: <%= c.status %></p><% }) %>
+      <div class="actions">
+        <form method="post" action="/admin/items/<%= item.item_id %>/<%= item.is_hidden ? 'unhide' : 'hide' %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="back" value="/items/<%= item.item_id %>"><button class="btn btn-small btn-ghost"><%= item.is_hidden ? 'Show report' : 'Hide report' %></button></form>
+        <% if (item.status !== 'Recovered') { %><form method="post" action="/admin/items/<%= item.item_id %>/recovered"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="back" value="/items/<%= item.item_id %>"><button class="btn btn-small">Mark recovered</button></form><% } %>
+      </div>
+    </section>
+    <% } %>
+  </aside>
+</article>
+<%- include('partials/foot') %>

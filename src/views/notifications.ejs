@@ -1,0 +1,11 @@
+<%- include('partials/head') %>
+<div class="section-head"><h1>Notifications</h1>
+  <% if (notifications.length) { %><form method="post" action="/notifications/read-all"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-small btn-ghost">Mark all as read</button></form><% } %></div>
+<% if (!notifications.length) { %><p class="empty">Nothing yet. We will tell you when a report matches or a claim is reviewed.</p><% } %>
+<% notifications.forEach(function(n){ %>
+<form method="post" action="/notifications/<%= n.notification_id %>/open" class="note-row <%= n.is_read ? '' : 'unread' %>">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="link" value="<%= n.link || '' %>">
+  <button class="linklike"><%= n.message %></button><span class="muted"><%= fmtDate(n.created_at) %></span>
+</form>
+<% }) %>
+<%- include('partials/foot') %>

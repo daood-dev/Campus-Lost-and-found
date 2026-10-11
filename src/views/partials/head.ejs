@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> | UET Campus Lost &amp; Found</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/"><span class="brand-tag" aria-hidden="true"><span>UET</span></span><span class="brand-words"><strong>UET</strong><small>Campus Lost &amp; Found</small></span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="/">Home</a>
+      <a href="/search">Browse items</a>
+      <a href="/report/lost">Report lost</a>
+      <a href="/report/found">Report found</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/about">About</a>
+      <% if (currentUser) { %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/notifications">Notifications<% if (unreadCount) { %> <span class="count"><%= unreadCount %></span><% } %></a>
+        <% if (currentUser.role === 'admin') { %><a href="/admin">Admin</a><% } %>
+        <form method="post" action="/logout" class="inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="logout-button"><span aria-hidden="true">↪</span> Sign out</button></form>
+      <% } else { %>
+        <a href="/contact">Contact</a>
+        <a href="/login">Log in</a>
+        <a class="btn btn-small" href="/register">Create account</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
+<main id="main" class="wrap">
+<% if (flash) { %><div class="flash flash-<%= flash.type %>" role="status"><%= flash.text %></div><% } %>

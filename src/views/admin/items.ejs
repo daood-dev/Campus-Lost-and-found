@@ -1,0 +1,26 @@
+<%- include('../partials/head') %>
+<h1>Moderate reports</h1>
+<nav class="subnav"><a href="/admin">Overview</a><a href="/admin/claims">Claims</a><a href="/admin/users">Users</a></nav>
+<form class="filters" method="get" action="/admin/items">
+  <label>Keywords<input name="q" value="<%= filters.q %>"></label>
+  <label>Type<select name="type"><option value="">All</option><option <%= filters.type==='Lost'?'selected':'' %>>Lost</option><option <%= filters.type==='Found'?'selected':'' %>>Found</option></select></label>
+  <label>Status<select name="status"><option value="">Any</option><% statuses.forEach(function(s){ %><option <%= filters.status===s?'selected':'' %>><%= s %></option><% }) %></select></label>
+  <button class="btn">Filter</button>
+</form>
+<div class="table-wrap"><table>
+  <thead><tr><th>Report</th><th>Type</th><th>Status</th><th>Reporter</th><th>Actions</th></tr></thead>
+  <tbody>
+  <% items.forEach(function(it){ %>
+    <tr>
+      <td><a href="/items/<%= it.item_id %>"><%= it.title %></a><% if (it.is_hidden) { %> <span class="status status-hidden">Hidden</span><% } %></td>
+      <td><%= it.report_type %></td><td><%= it.status %></td><td><%= it.reporter_name %></td>
+      <td class="actions">
+        <form method="post" action="/admin/items/<%= it.item_id %>/<%= it.is_hidden ? 'unhide' : 'hide' %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-small btn-ghost"><%= it.is_hidden ? 'Show' : 'Hide' %></button></form>
+        <form method="post" action="/admin/items/<%= it.item_id %>/delete"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-small btn-danger">Delete</button></form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table></div>
+<% if (!items.length) { %><p class="empty">No reports match.</p><% } %>
+<%- include('../partials/foot') %>

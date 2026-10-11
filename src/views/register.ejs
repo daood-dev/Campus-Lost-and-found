@@ -1,0 +1,15 @@
+<%- include('partials/head') %>
+<section class="narrow">
+  <h1>Create your account</h1>
+  <% if (errors.length) { %><ul class="errors" role="alert"><% errors.forEach(function(e){ %><li><%= e %></li><% }) %></ul><% } %>
+  <form method="post" action="/register" class="form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>Full name<input name="full_name" value="<%= values.full_name || '' %>" required minlength="2" autocomplete="name"></label>
+    <label>University email<input type="email" name="email" value="<%= values.email || '' %>" required autocomplete="email"></label>
+    <label>Password<input type="password" name="password" required minlength="8" autocomplete="new-password"><small>At least 8 characters, with a letter and a number.</small></label>
+    <label>I am a<select name="role"><option value="student" <%= values.role === 'staff' ? '' : 'selected' %>>Student</option><option value="staff" <%= values.role === 'staff' ? 'selected' : '' %>>Teacher or staff member</option></select></label>
+    <button class="btn">Create account</button>
+  </form>
+  <p>Already registered? <a href="/login">Log in</a></p>
+</section>
+<%- include('partials/foot') %>

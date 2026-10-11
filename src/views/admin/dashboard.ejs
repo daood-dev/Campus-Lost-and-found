@@ -1,0 +1,24 @@
+<%- include('../partials/head') %>
+<h1>Administration</h1>
+<nav class="subnav"><a href="/admin/items">Reports</a><a href="/admin/claims">Claims</a><a href="/admin/users">Users</a></nav>
+<dl class="facts">
+  <div><dt>Users</dt><dd><%= stats.users %></dd></div>
+  <div><dt>Lost reports</dt><dd><%= stats.lost %></dd></div>
+  <div><dt>Found reports</dt><dd><%= stats.found %></dd></div>
+  <div><dt>Recovered</dt><dd><%= stats.recovered %></dd></div>
+  <div><dt>Claims to review</dt><dd><%= stats.pendingClaims %></dd></div>
+  <div><dt>Suggested matches</dt><dd><%= stats.suggestedMatches %></dd></div>
+</dl>
+<section><h2>Most reported categories</h2>
+  <% if (!stats.byCategory.length) { %><p class="empty">No reports yet.</p><% } %>
+  <% stats.byCategory.forEach(function(c){ %><p class="bar-row"><span><%= c.category %></span><span class="bar"><i class="w<%= Math.min(100, Math.round(c.n / stats.byCategory[0].n * 10) * 10) %>"></i></span><span><%= c.n %></span></p><% }) %>
+</section>
+<section><h2>Claims waiting for review</h2>
+  <% if (!pending.length) { %><p class="empty">All caught up.</p><% } %>
+  <% pending.forEach(function(c){ %><p class="row-line"><a href="/admin/claims"><%= c.item_title %></a><span class="muted">by <%= c.claimant_name %></span></p><% }) %>
+</section>
+<section><h2>Recent admin actions</h2>
+  <% if (!audit.length) { %><p class="empty">No actions recorded yet.</p><% } %>
+  <% audit.forEach(function(a){ %><p class="row-line"><span><%= a.admin_name %>: <%= a.action %> (<%= a.target %>)</span><span class="muted"><%= fmtDate(a.created_at) %></span></p><% }) %>
+</section>
+<%- include('../partials/foot') %>

@@ -1,0 +1,6 @@
+<%- include('partials/head') %>
+<section class="page-hero"><p class="eyebrow">CAMPUS SUPPORT</p><h1>Contact the team.</h1><p class="lead">Send feedback about a report, a technical issue, or a suggestion for improving the service.</p></section>
+<% if (sent) { %><div class="flash flash-success"><strong>Message validated.</strong> This demo does not send email yet. Please contact your campus administrator through the official university channel.</div><% } else { %>
+<% if (error) { %><div class="flash flash-error"><%= error %></div><% } %>
+<form class="form panel narrow" method="post" action="/contact"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label>Your name<input name="name" required minlength="2" maxlength="100" value="<%= values ? values.name : (currentUser ? currentUser.full_name : '') %>"></label><label>Email address<input type="email" name="email" required maxlength="180" value="<%= values ? values.email : (currentUser ? currentUser.email : '') %>"></label><label>How can we help?<textarea name="message" rows="6" required minlength="10" maxlength="2000"><%= values ? values.message : '' %></textarea><small>10–2,000 characters. Do not include passwords or other sensitive information.</small></label><button class="btn" type="submit">Submit message</button></form><% } %>
+<%- include('partials/foot') %>

@@ -1,0 +1,8 @@
+<a class="card item-card" href="/items/<%= it.item_id %>">
+  <% if (it.image_url) { %><img src="<%= it.image_url %>" alt="" loading="lazy"><% } else { %><div class="noimg" role="img" aria-label="<%= it.category %> illustration"><span aria-hidden="true">✦</span><span><%= it.category %></span></div><% } %>
+  <div class="card-body">
+    <div class="row"><span class="type type-<%= it.report_type.toLowerCase() %>"><%= it.report_type %></span><%- include('status', { s: it.status }) %></div>
+    <h3><%= it.title %></h3>
+    <p class="muted"><%= it.location %>, <%= fmtDate(it.item_date) %></p>
+  </div>
+</a>

@@ -1,0 +1,28 @@
+<%- include('partials/head') %>
+<h1>Hello, <%= currentUser.full_name.split(' ')[0] %></h1>
+<div class="actions"><a class="btn btn-lost" href="/report/lost">Report lost item</a><a class="btn btn-found" href="/report/found">Report found item</a></div>
+
+<% if (matches.length) { %>
+<section><h2>Possible matches</h2>
+  <% matches.forEach(function(m){ const other = m.lost_item_id === m.for_item.item_id ? m.found_item_id : m.lost_item_id; %>
+    <p class="row-line"><a href="/items/<%= other %>"><%= m.for_item.title %> may match <%= m.lost_item_id === m.for_item.item_id ? m.found_title : m.lost_title %></a><span class="muted">Similarity <%= m.match_score %>/100</span></p>
+  <% }) %>
+</section><% } %>
+
+<section><h2>Your reports</h2>
+  <% if (!items.length) { %><p class="empty">You have not reported anything yet.</p><% } %>
+  <div class="grid"><% items.forEach(function(it){ %><%- include('partials/card', { it: it }) %><% }) %></div>
+</section>
+
+<section><h2>Your claims</h2>
+  <% if (!claims.length) { %><p class="empty">Claims you submit on found items will appear here.</p><% } %>
+  <% claims.forEach(function(c){ %><p class="row-line"><a href="/items/<%= c.item_id %>"><%= c.item_title %></a><span class="status status-<%= slug(c.status) %>"><%= c.status %></span></p><% }) %>
+  <% if (claims.length) { %><p><a href="/claims">All claims</a></p><% } %>
+</section>
+
+<section><h2>Recent notifications</h2>
+  <% if (!notifications.length) { %><p class="empty">You will be notified here about matches and claim decisions.</p><% } %>
+  <% notifications.forEach(function(n){ %><p class="row-line <%= n.is_read ? '' : 'unread' %>"><%= n.message %></p><% }) %>
+  <p><a href="/notifications">All notifications</a></p>
+</section>
+<%- include('partials/foot') %>

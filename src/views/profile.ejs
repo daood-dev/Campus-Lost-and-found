@@ -1,0 +1,16 @@
+<%- include('partials/head') %>
+<section class="narrow">
+  <h1>Your profile</h1>
+  <% if (errors.length) { %><ul class="errors" role="alert"><% errors.forEach(function(e){ %><li><%= e %></li><% }) %></ul><% } %>
+  <form method="post" action="/profile" class="form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>Full name<input name="full_name" value="<%= currentUser.full_name %>" required></label>
+    <label>Email<input value="<%= currentUser.email %>" disabled></label>
+    <fieldset><legend>Change password (optional)</legend>
+      <label>Current password<input type="password" name="current_password" autocomplete="current-password"></label>
+      <label>New password<input type="password" name="new_password" autocomplete="new-password"></label>
+    </fieldset>
+    <button class="btn">Save changes</button>
+  </form>
+</section>
+<%- include('partials/foot') %>

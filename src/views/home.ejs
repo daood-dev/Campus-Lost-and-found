@@ -1,0 +1,49 @@
+<%- include('partials/head') %>
+<section class="hero">
+  <p class="eyebrow"><span class="eyebrow-dot"></span> UET CAMPUS COMMUNITY PORTAL</p>
+  <h1>Lost something?<br><span class="hero-accent">Let’s bring it back.</span></h1>
+  <p class="hero-copy">A smarter, friendlier way to reunite campus essentials. Report missing belongings, discover found items, and reconnect owners with their property. Search reports, get match alerts, and follow claims in one place.</p>
+  <form class="search-big" action="/search" method="get" role="search">
+    <label class="sr" for="q">Search reports</label>
+    <input id="q" name="q" placeholder="Black wallet, student card, blue bottle" autocomplete="off">
+    <button class="btn" aria-label="Search lost and found reports">Search reports <span aria-hidden="true">→</span></button>
+  </form>
+  <div class="actions">
+    <a class="btn btn-lost" href="/report/lost">I lost something</a>
+    <a class="btn btn-found" href="/report/found">I found something</a>
+  </div>
+  <dl class="facts">
+    <div><dt>Open reports</dt><dd><%= stats.openItems %></dd></div>
+    <div><dt>Items recovered</dt><dd><%= stats.recovered %></dd></div>
+    <div><dt>Waiting for review</dt><dd><%= stats.pendingClaims %></dd></div>
+  </dl>
+</section>
+<section>
+  <div class="section-head"><div><p class="eyebrow">FRESH FROM CAMPUS</p><h2>Recently reported items</h2></div><a href="/search">Explore all reports <span aria-hidden="true">→</span></a></div>
+  <% if (!recent.length) { %>
+    <div class="demo-note"><strong>Preview items</strong><span>These sample cards show how reports will look. They are examples, not live submissions.</span></div>
+    <div class="grid sample-grid">
+      <article class="card sample-card"><div class="sample-photo"><img src="/images/items/backpack.jpg" alt="Black backpack on a campus bench"><span class="type type-lost">Lost</span></div><div class="card-body"><div class="row"><h3>Black backpack</h3><span class="sample-label">Sample</span></div><p>Black backpack with a laptop sleeve. Last seen near the library.</p><div class="item-meta"><span>⌖ Library</span><span>▦ Recent example</span></div></div></article>
+      <article class="card sample-card"><div class="sample-photo"><img src="/images/items/phone.jpg" alt="Black smartphone on a wooden desk"><span class="type type-found">Found</span></div><div class="card-body"><div class="row"><h3>Smartphone</h3><span class="sample-label">Sample</span></div><p>Phone found near the engineering block. Owner can verify identifying details.</p><div class="item-meta"><span>⌖ Engineering block</span><span>▦ Recent example</span></div></div></article>
+      <article class="card sample-card"><div class="sample-photo"><img src="/images/items/keys.jpg" alt="Set of keys with a blue key fob"><span class="type type-found">Found</span></div><div class="card-body"><div class="row"><h3>Keys with blue fob</h3><span class="sample-label">Sample</span></div><p>A small set of keys found around the canteen area.</p><div class="item-meta"><span>⌖ Canteen</span><span>▦ Recent example</span></div></div></article>
+      <article class="card sample-card"><div class="sample-photo"><img src="/images/items/headphones.jpg" alt="Black over-ear headphones"><span class="type type-lost">Lost</span></div><div class="card-body"><div class="row"><h3>Black headphones</h3><span class="sample-label">Sample</span></div><p>Over-ear headphones possibly left in a computer lab.</p><div class="item-meta"><span>⌖ Computer lab</span><span>▦ Recent example</span></div></div></article>
+      <article class="card sample-card"><div class="sample-photo"><img src="/images/items/wallet.jpg" alt="Brown leather wallet"><span class="type type-found">Found</span></div><div class="card-body"><div class="row"><h3>Brown wallet</h3><span class="sample-label">Sample</span></div><p>Wallet found near an academic block. Please verify ownership privately.</p><div class="item-meta"><span>⌖ Admin block</span><span>▦ Recent example</span></div></div></article>
+      <article class="card sample-card"><div class="sample-photo"><img src="/images/items/water-bottle.jpg" alt="Blue reusable water bottle"><span class="type type-lost">Lost</span></div><div class="card-body"><div class="row"><h3>Blue water bottle</h3><span class="sample-label">Sample</span></div><p>Reusable blue bottle misplaced somewhere around campus.</p><div class="item-meta"><span>⌖ Campus grounds</span><span>▦ Recent example</span></div></div></article>
+    </div>
+  <% } else { %><div class="grid"><% recent.forEach(function(it){ %><%- include('partials/card', { it: it }) %><% }) %></div><% } %>
+</section>
+<section class="feature-strip" aria-label="Platform features">
+  <article class="feature-card"><span class="feature-icon" aria-hidden="true">⌕</span><h3>Search smarter</h3><p>Filter by keyword, category, location, date, and report status.</p></article>
+  <article class="feature-card"><span class="feature-icon" aria-hidden="true">✦</span><h3>Automatic matching</h3><p>Similar lost and found reports are compared to surface possible matches.</p></article>
+  <article class="feature-card"><span class="feature-icon" aria-hidden="true">✓</span><h3>Safer handover</h3><p>Private identifying details help verify ownership before an item is returned.</p></article>
+</section>
+<section class="how">
+  <p class="eyebrow">SIMPLE, SECURE, COMMUNITY-POWERED</p><h2>Three steps to a reunion</h2>
+  <ol>
+    <li><strong>Report.</strong> Describe the item. Add identifying marks that only the owner would know; they stay private.</li>
+    <li><strong>Get matched.</strong> New reports are compared with existing ones and you are notified when something looks similar.</li>
+    <li><strong>Claim and collect.</strong> Submit your proof. An administrator verifies ownership before the item is returned.</li>
+  </ol>
+</section>
+<section class="quick-links"><a href="/how-it-works"><strong>How it works</strong><span>Understand the reporting and claim process →</span></a><a href="/safety"><strong>Safety &amp; privacy</strong><span>Tips for secure reporting and handover →</span></a><a href="/contact"><strong>Contact support</strong><span>Share feedback or report a technical issue →</span></a></section>
+<%- include('partials/foot') %>
